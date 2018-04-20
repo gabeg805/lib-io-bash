@@ -22,35 +22,10 @@
 # ------------------------------------------------------------------------------
 
 # Exit statuses
-PROJECT=
 ENORM=0
 EGETOPT=1
 EARG=2
 EARGS=2
-
-# ##
-# #
-# #
-# parse_options()
-# {
-#     local program="${1}"
-#     local short="${2}"
-#     local long="${3}"
-#     shift 3
-#     if [ $# -eq 0 ]
-#     then
-#         usage
-#         exit ${ENORM}
-#     fi
-
-#     local args=$(getopt -o "${short}" --long "${long}" --name "${PROGRAM}" -- "${@}")
-#     if [ $? -ne 0 ]
-#     then
-#         usage
-#         exit ${EGETOPT}
-#     fi
-#     eval set -- "${args}"
-# }
 
 # ------------------------------------------------------------------------------
 # Print information
@@ -75,9 +50,18 @@ print_warn()
 print_err()
 {
     local prog="PROG"
-    [ -n "${PROG}" ]     && prog="${PROG}"
-    [ -n "${PROGRAM}" ]  && prog="${PROGRAM}"
-
+    if [ -n "${PROG}" ]
+    then
+        prog="${PROG}"
+    elif [ -n "${PROGRAM}" ]
+    then
+        prog="${PROGRAM}"
+    elif [ -n "${PROJECT}" ]
+    then
+        prog="${PROJECT}"
+    else
+        :
+    fi
     echo "${prog}: ${@}" 1>&2
     log_out "error" "${@}"
     return 0
