@@ -1,15 +1,11 @@
 #!/bin/bash
 # ------------------------------------------------------------------------------
 # 
-# Name:    util.sh
-# Author:  Gabriel Gonzalez
-# Email:   gabeg@bu.edu
-# License: The MIT License (MIT)
+# File: io.sh
+# Author: Gabe Gonzalez
 # 
-# Syntax: . util.sh
-# 
-# Description: A compilation of utility functions that can be used by sourcing
-#              this file.
+# Brief: A compilation of utility functions focusing on I/O operations, like
+#        printing.
 # 
 # Notes: To use some of the functionality, certain global variables are needed:
 # 
@@ -21,14 +17,17 @@
 # 
 # ------------------------------------------------------------------------------
 
-# Exit statuses
+##
+# Exit statuses.
+##
 ENORM=0
 EGETOPT=1
 EARG=2
 EARGS=2
 
-# ------------------------------------------------------------------------------
-# Print information
+###
+# Print an informational message.
+##
 print_info()
 {
     print_out ":: ${@}"
@@ -36,8 +35,9 @@ print_info()
     return 0
 }
 
-# ------------------------------------------------------------------------------
-# Print warning
+##
+# Print a warning message.
+##
 print_warn()
 {
     print_out "~~ ${@}"
@@ -45,8 +45,9 @@ print_warn()
     return 0
 }
 
-# ------------------------------------------------------------------------------
-# Print error
+##
+# Print an error message.
+##
 print_err()
 {
     local prog="PROG"
@@ -67,21 +68,25 @@ print_err()
     return 0
 }
 
-# ------------------------------------------------------------------------------
-# Print output
+##
+# Print output.
+##
 print_out()
 {
-    if [ -z "${VERBOSE}" ]; then
+    if [ -z "${VERBOSE}" ]
+    then
         return 1
     fi
     echo "${@}"
 }
 
-# ------------------------------------------------------------------------------
-# Log output
+##
+# Log output.
+##
 log_out()
 {
-    if [ -n "${LOG}" -o -n "${LOGFILE}" ]; then
+    if [ -n "${LOG}" -o -n "${LOGFILE}" ]
+    then
         local type="$(str_to_upper "${1}")"
         local log=
         shift
@@ -91,26 +96,31 @@ log_out()
     fi
 }
 
-# ------------------------------------------------------------------------------
-# String to uppercase
+##
+# Convert a string to all uppercase characters.
+##
 str_to_upper()
 {
     echo "${@}" | tr '[:lower:]' '[:upper:]'
 }
 
-# ------------------------------------------------------------------------------
-# String to lowercase
+##
+# Convert a string to all lowercase characters.
+##
 str_to_lower()
 {
     echo "${@}" | tr '[:upper:]' '[:lower:]'
 }
 
-# ------------------------------------------------------------------------------
-# String to capitalize first letter and lowercase all other letters
+##
+# Convert first character in string to a capital, and every other character
+# after it to lowercase.
+##
 str_to_capital()
 {
     local str="${@}"
-    if [ -z "${str}" ]; then
+    if [ -z "${str}" ]
+    then
         return
     fi
     local firstchar=$(echo "${str:0:1}" | tr '[a-z]' '[A-Z]')
@@ -118,19 +128,22 @@ str_to_capital()
     echo "${firstchar}${restchar}"
 }
 
-# ------------------------------------------------------------------------------
-# Return log timestamp
+##
+# Return the current time in a uniform format.
+##
 get_log_timestamp()
 {
     local fmt="%F %T %z"
     date +"${fmt}"
 }
 
-# ------------------------------------------------------------------------------
-# Check if value is integer
+##
+# Check if the input value is an integer.
+##
 is_integer()
 {
-    if [ "${1}" -eq "${1}" ] 2>/dev/null; then
+    if [ "${1}" -eq "${1}" ] 2>/dev/null
+    then
         return 0
     else
         return 1
