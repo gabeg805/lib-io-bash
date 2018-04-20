@@ -2,7 +2,7 @@
 # ------------------------------------------------------------------------------
 # 
 # File: io.sh
-# Author: Gabe Gonzalez
+# Author: Gabriel Gonzalez
 # 
 # Brief: A compilation of utility functions focusing on I/O operations, like
 #        printing.

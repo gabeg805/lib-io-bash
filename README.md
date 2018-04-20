@@ -20,6 +20,8 @@ or
 source "io.sh"
 ```
 
+If it does not reside under the *PATH*, you will need to give the full or relative path to *io.sh*.
+
 ## Uninstall
 
 Remove the file.
