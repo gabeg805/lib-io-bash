@@ -18,20 +18,55 @@
 # ------------------------------------------------------------------------------
 
 ##
+# Project name.
+##
+PROJECT="${0##*/}"
+
+##
 # Exit statuses.
 ##
-ENORM=0
-EGETOPT=1
-EARG=2
-EARGS=2
+EXIT_SUCCESS=0
+EXIT_GETOPT_ERROR=1
+
+##
+# Parse command line options.
+# 
+# Note: Assumes that 'usage' is the name of a function.
+##
+cli_parse()
+{
+    local prog="${1}"
+    local short="${2}"
+    local long="${3}"
+    local args=
+    shift 3
+
+    if [ $# -eq 0 ]
+    then
+        usage
+        exit ${EXIT_SUCCESS}
+    fi
+
+    args=$(getopt -o "${short}" --long "${long}" --name "${prog}" -- "${@}")
+    if [ $? -ne 0 ]
+    then
+        usage
+        exit ${EXIT_GETOPT_ERROR}
+    fi
+    eval set -- "${args}"
+}
 
 ###
 # Print an informational message.
 ##
 print_info()
 {
-    print_out ":: ${@}"
-    log_out "info" "${@}"
+    if [ -z "${VERBOSE}" ]
+    then
+        return 1
+    fi
+    print_msg ":: ${@}"
+    log_msg "info" "${@}"
     return 0
 }
 
@@ -40,8 +75,12 @@ print_info()
 ##
 print_warn()
 {
-    print_out "~~ ${@}"
-    log_out "warning" "${@}"
+    if [ -z "${VERBOSE}" ]
+    then
+        return 1
+    fi
+    print_msg "~~ ${@}"
+    log_msg "warning" "${@}"
     return 0
 }
 
@@ -64,26 +103,22 @@ print_err()
         :
     fi
     echo "${prog}: ${@}" 1>&2
-    log_out "error" "${@}"
+    log_msg "error" "${@}"
     return 0
 }
 
 ##
 # Print output.
 ##
-print_out()
+print_msg()
 {
-    if [ -z "${VERBOSE}" ]
-    then
-        return 1
-    fi
     echo "${@}"
 }
 
 ##
 # Log output.
 ##
-log_out()
+log_msg()
 {
     if [ -n "${LOG}" -o -n "${LOGFILE}" ]
     then
